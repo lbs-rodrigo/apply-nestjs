@@ -1,9 +1,10 @@
 import { Module } from '@nestjs/common';
-import { UserModule } from './user/user.module';
-import { BlogModule } from './blog/blog.module';
+import { UserModule } from './modules/user/user.module';
+import { BlogModule } from './modules/blog/blog.module';
+import { TypeOrmModule } from '@nestjs/typeorm';
 
 @Module({
-  imports: [UserModule, BlogModule],
+  imports: [UserModule, BlogModule, TypeOrmModule.forRoot()],
   controllers: [],
   providers: [],
 })
