@@ -1,11 +1,15 @@
 import { Module } from '@nestjs/common';
-import { UserModule } from './modules/user/user.module';
 import { BlogModule } from './modules/blog/blog.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { getConnectionOptions } from 'typeorm';
+import { UserModule } from './modules/user/user.module';
 
 @Module({
-  imports: [UserModule, BlogModule, TypeOrmModule.forRoot()],
-  controllers: [],
-  providers: [],
+  imports: [TypeOrmModule.forRootAsync({
+    useFactory: async () =>
+      Object.assign(await getConnectionOptions(), {
+        autoLoadEntities: true
+      })
+  }), BlogModule, UserModule]
 })
 export class AppModule {}
