@@ -9,3 +9,5 @@ https://kafka.js.org/docs/configuration
 ## Patners
 https://www.enterpriseintegrationpatterns.com/
 
+## Remover containers
+connect           /etc/confluent/docker/run
