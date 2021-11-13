@@ -1,10 +1,11 @@
-import { Module } from '@nestjs/common';
+import { Inject, Module, OnModuleInit } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
-import { ClientsModule, Transport } from '@nestjs/microservices';
+import { ClientKafka, ClientsModule, Transport } from '@nestjs/microservices';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { BlogController } from './controllers/blog.controller';
 import { CreatePostHandler } from './events/create/create-post.handler';
 import { Blog } from './repository/blog.entity';
+import { BLOG_SERVICE, EVENT_POST_CREATE, KAFKA_CLIENTID, KAFKA_GROUPDID, MESSAGE_GET } from './blog.constants';
 import { BlogService } from './services/blog.services';
 
 @Module({
@@ -13,15 +14,15 @@ import { BlogService } from './services/blog.services';
     TypeOrmModule.forFeature([Blog]),
     ClientsModule.register([
       {
-        name: 'BLOG_SERVICE',
+        name: BLOG_SERVICE,
         transport: Transport.KAFKA,
         options: {
           client: {
-            clientId: 'blog',
+            clientId: KAFKA_CLIENTID,
             brokers: ['localhost:9092'],
           },
           consumer: {
-            groupId: 'blog-consumer',
+            groupId: KAFKA_GROUPDID,
           },
         },
       },
@@ -30,4 +31,11 @@ import { BlogService } from './services/blog.services';
   controllers: [BlogController],
   providers: [BlogService, CreatePostHandler],
 })
-export class BlogModule {}
+export class BlogModule implements OnModuleInit {
+  constructor(@Inject(BLOG_SERVICE) private readonly client: ClientKafka) { }
+  onModuleInit() {
+    console.log('BlogModule inicializado!');
+    this.client.subscribeToResponseOf(MESSAGE_GET); 
+    this.client.subscribeToResponseOf(EVENT_POST_CREATE);
+  }
+}
