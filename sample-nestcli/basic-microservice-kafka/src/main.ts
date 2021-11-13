@@ -10,19 +10,12 @@ async function bootstrap() {
   });
   
   app.connectMicroservice({
-    transport: Transport.NATS,
-     options: { servers: ['nats://localhost:25666'] },
+    transport: Transport.KAFKA,
+     options: { client:{ brokers: ['localhost:9092'] } },
   });
 
   await app.startAllMicroservices();
-  await app.listen(3001);
+  await app.listen(3002);
   console.log(`Application is running on: ${await app.getUrl()}`);
-
-  // const app = await NestFactory.createMicroservice<MicroserviceOptions>(AppModule, {
-  //   transport: Transport.NATS,
-  //   options: {
-  //     servers: ['nats://localhost:25666'],
-  //   },
-  // });
 }
 bootstrap();
