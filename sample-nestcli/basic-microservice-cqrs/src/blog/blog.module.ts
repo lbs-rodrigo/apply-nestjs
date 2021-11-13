@@ -2,10 +2,8 @@ import { Module } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { CreatePostHandler } from './commands/create/create-post.handler';
 import { BlogController } from './controllers/blog.controller';
-import { CreatePostEvent } from './events/create/create-post.event';
-import { CreatedPostHandler } from './events/create/created-post.handler';
+import { CreatePostHandler } from './events/create/create-post.handler';
 import { Blog } from './repository/blog.entity';
 import { BlogService } from './services/blog.services';
 
@@ -30,6 +28,6 @@ import { BlogService } from './services/blog.services';
     ]),
   ],
   controllers: [BlogController],
-  providers: [BlogService, CreatePostHandler, CreatedPostHandler],
+  providers: [BlogService, CreatePostHandler],
 })
 export class BlogModule {}

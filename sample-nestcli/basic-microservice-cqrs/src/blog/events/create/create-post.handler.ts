@@ -6,7 +6,7 @@ import { Repository } from 'typeorm';
 import { CreatePostEvent } from './create-post.event';
 
 @EventsHandler(CreatePostEvent)
-export class CreatedPostHandler implements IEventHandler<CreatePostEvent> {
+export class CreatePostHandler implements IEventHandler<CreatePostEvent> {
   constructor(
     @InjectRepository(Blog)
     private readonly blogRepository: Repository<Blog>,
