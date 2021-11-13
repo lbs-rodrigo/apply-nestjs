@@ -9,6 +9,7 @@ import { BlogService } from './services/blog.service';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Blog])],
+  exports: [TypeOrmModule],
   controllers: [BlogController],
   providers: [
     BlogService,

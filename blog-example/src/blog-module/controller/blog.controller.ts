@@ -38,14 +38,14 @@ export class BlogController {
   @Patch(':id')
   @ApiOperation({ summary: 'Update post blog' })
   @ApiResponse({status: 200, description: 'Updated post', type: UpdateResult})
-  async update(@Param('id') id: string, @Body() updateBlogDto: UpdateBlogDto): Promise<UpdateResult> {
-    return await this.blogService.update(+id, updateBlogDto);
+  async update(@Param('id') id: string, @Body() updateBlogDto: UpdateBlogDto) {
+    await this.blogService.update(+id, updateBlogDto);
   }
 
   @Delete(':id')
   @ApiOperation({ summary: 'Delete post blog' })
   @ApiResponse({status: 200, description: 'Deleted post', type: DeleteResult})
-  async remove(@Param('id') id: string):Promise<DeleteResult> {
-    return await this.blogService.remove(+id);
+  async remove(@Param('id') id: string) {
+    await this.blogService.remove(+id);
   }
 }
