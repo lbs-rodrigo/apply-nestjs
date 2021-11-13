@@ -1,6 +1,7 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors, CacheInterceptor } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors, CacheInterceptor, ParseIntPipe, UseGuards } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { DeleteResult, UpdateResult } from 'typeorm';
+import { AuthGuard } from '../common/filters/auth.guard';
 import { Blog } from '../repository/blog.entity';
 import { BlogService } from '../services/blog.service';
 import { CreateBlogDto } from './dto/create-blog.dto';
@@ -8,6 +9,7 @@ import { UpdateBlogDto } from './dto/update-blog.dto';
 
 @ApiTags('blog')
 @Controller('blog')
+@UseGuards(AuthGuard)
 @UseInterceptors(CacheInterceptor)
 export class BlogController {
   constructor(private readonly blogService: BlogService) {}
@@ -15,22 +17,22 @@ export class BlogController {
   @Post()
   @ApiOperation({ summary: 'Create post blog' })
   @ApiResponse({status: 200, description: 'Created post', type: Blog})
-  async create(@Body() createBlogDto: CreateBlogDto):Promise<Blog> {
+  async createPost(@Body() createBlogDto: CreateBlogDto):Promise<Blog> {
     return await this.blogService.create(createBlogDto);
   }
 
   @Get()
   @ApiOperation({ summary: 'List all posts' })
   @ApiResponse({status: 200, description: 'List all', type: Blog, isArray: true})
-  async findAll():Promise<Blog[]> {
+  async getAll():Promise<Blog[]> {
     return await this.blogService.findAll();
   }
 
   @Get(':id')
   @ApiOperation({ summary: 'Find by id post' })
   @ApiResponse({status: 200, description: 'Find one', type: Blog})
-  async findOne(@Param('id') id: string):Promise<Blog> {
-    return await this.blogService.findOne(+id);
+  async getOne(@Param('id', ParseIntPipe) id: number) {
+    return await this.blogService.findOne(id);
   }
 
   @Patch(':id')

@@ -16,6 +16,7 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, configSwagger);
   SwaggerModule.setup('api', app, document);
   
+  app.enableShutdownHooks();
   await app.listen(`${config.get('APP_PORT')}`);
   console.log(`Application is running on: ${await app.getUrl()}`);
 }
